@@ -60,8 +60,9 @@ export default function Form(){
     }
 
     return(
-        <Pressable onPress={Keyboard.dismiss} style={styles.formContext}>
-            <View style={styles.form}>
+        <View style={styles.formContext}>
+            {imc == null ?
+            <Pressable onPress={Keyboard.dismiss} style={styles.form}>
                 <Text style={styles.formLabel}>Altura</Text>
                 <Text style={styles.errorMessage}>{errorMessage}</Text>
                 <TextInput style={styles.input} placeholder="Ex: 1.75" keyboardType="numeric" onChangeText={setAltura} value={altura}/>
@@ -71,8 +72,15 @@ export default function Form(){
                 <TouchableOpacity onPress={validationImc} style={styles.buttonCalculator}>
                     <Text style={styles.textButtonCalculator}>{textButton}</Text>
                 </TouchableOpacity>
-            </View>
-            <ResultImc messageResultImc={messageImc} resultImc={imc} numFaixa={faixa}/>
-        </Pressable>
+                </Pressable>
+                :
+                <View  style={styles.exhibitionResultImc}>
+                    <ResultImc messageResultImc={messageImc} resultImc={imc} numFaixa={faixa}/>
+                    <TouchableOpacity onPress={validationImc} style={styles.buttonCalculator}>
+                        <Text style={styles.textButtonCalculator}>{textButton}</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+        </View>
     );
 }

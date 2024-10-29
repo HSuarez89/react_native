@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Text, TextInput, View, TouchableOpacity, Keyboard, Vibration, Pressable } from "react-native"
+import { Text, TextInput, View, TouchableOpacity, Keyboard, Vibration, Pressable, FlatList } from "react-native"
 import ResultImc from "./ResultImc"
 import styles from "./style"
 
@@ -13,14 +13,16 @@ export default function Form(){
     const [textButton, setTextButton] = useState("Calcular")
     const [faixa, setFaixa] = useState("")
     const [errorMessage, setErrorMessage] = useState(null)
+    const [imcList, setImcList] = useState([])
 
 
     function validationImc(){
         if (peso != null && altura != null) {
             let alturaFormato = altura.replace(",", ".")
-            const result = (peso / (alturaFormato * alturaFormato)).toFixed(2);
-            
+            let result = (peso / (alturaFormato * alturaFormato)).toFixed(2);
+            setImcList ((arr) => [...arr, {id: new Date().getTime, imc: result}])
             setImc(result);
+
     
             // Define a faixa com base no valor de IMC calculado
             if (result < 18.5) {
@@ -81,6 +83,14 @@ export default function Form(){
                     </TouchableOpacity>
                 </View>
             }
+            <FlatList style={styles.listImcs} data={imcList.reverse()} renderItem={({item}) => {
+                return(
+                    <Text style={styles.resultImcItem}> Resultado IMC = 
+                        <Text style={styles.textResultImcItemList}> {item.imc}</Text>
+                    </Text>
+                )
+            }} keyExtractor={(item) => {item.id}}>
+            </FlatList>
         </View>
     );
 }

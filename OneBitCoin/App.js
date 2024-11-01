@@ -1,18 +1,35 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Platform, StatusBar } from 'react-native'
 import CurrentPrice from './src/components/CurrentPrice'
 import HistoryGraphic from './src/components/HistoryGraphic'
 import QuotationList from './src/components/QuotationsList'
 import QuotationItems from './src/components/QuotationsList/QuotationItems'
 
+
+
 export default function App() {
+
+  const [current, setCurrent] = useState(null);
+
+    useEffect(() => {
+        fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json')
+            .then(response => response.json())
+            .then(data => {
+                const currentPrice = data.bpi.USD.rate;
+                setCurrent(currentPrice);
+            })
+            .catch(error => {
+                console.error("Error fetching current Bitcoin price:", error);
+            });
+    }, []);
+  
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor='#33302B'/>
-      <CurrentPrice/>
+      <CurrentPrice current={current}/>
       <HistoryGraphic/>
       <QuotationList/>
-      <QuotationItems/>
+      <QuotationItems current={current}/>
     </SafeAreaView>
   );
 }
